@@ -1,0 +1,563 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCADA Master â€” Portal de Descargas | Hitech Ingenium Labs</title>
+
+<!-- ICONO DE LA PÃGINA -->
+<link rel="icon" type="image/png" sizes="32x32" href="gemini-svg.png?v=5">
+<link rel="icon" type="image/png" sizes="192x192" href="gemini-svg.png?v=5">
+<link rel="apple-touch-icon" sizes="180x180" href="gemini-svg.png?v=5">
+<meta name="theme-color" content="#080C14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080C14;--surface:#0D1220;--surface2:#121929;--surface3:#1A2338;
+  --border:#1E2D47;--border2:#253450;--green:#00E676;--green-glow:rgba(0,230,118,0.12);
+  --green-glow2:rgba(0,230,118,0.06);--blue:#2979FF;--blue-glow:rgba(41,121,255,0.12);
+  --cyan:#00B8D4;--text:#F0F4FC;--text2:#8B9AB5;--text3:#5A6E8A;
+  --tag-bg:#0D1A2E;--radius:12px;--radius-sm:8px;--radius-lg:20px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.65;overflow-x:hidden;}
+nav{position:sticky;top:0;z-index:100;background:rgba(8,12,20,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;gap:32px;height:60px;}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--green);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+.nav-links{display:flex;gap:24px;align-items:center;flex:1}
+.nav-links a{font-size:14px;color:var(--text2);text-decoration:none;transition:color .2s;white-space:nowrap;}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{margin-left:auto;background:var(--green);color:#000;border:none;padding:9px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;transition:opacity .2s;}
+.nav-cta:hover{opacity:.9}
+.hero{position:relative;padding:90px 40px 80px;text-align:center;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,230,118,0.08) 0%, transparent 70%),radial-gradient(ellipse 40% 40% at 15% 80%, rgba(41,121,255,0.06) 0%, transparent 60%);pointer-events:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--green-glow);border:1px solid rgba(0,230,118,0.2);border-radius:100px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px;}
+.hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.hero h1{font-size:clamp(2.4rem,5vw,4.2rem);font-weight:700;line-height:1.1;letter-spacing:-1px;margin-bottom:12px;}
+.hero h1 .brand-name{background:linear-gradient(135deg,#FFFFFF 0%,#8B9AB5 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero h1 .accent{background:linear-gradient(135deg,var(--green) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{max-width:680px;margin:0 auto 48px;color:var(--text2);font-size:1.15rem;font-weight:400;}
+.hero-version-badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:4px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);margin-bottom:40px;}
+.hero-downloads{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:60px;}
+.dl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px 28px;width:280px;text-align:left;position:relative;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;}
+.dl-card:hover{transform:translateY(-4px);border-color:var(--border2);}
+.dl-card.android:hover{box-shadow:0 16px 48px rgba(0,230,118,0.08)}
+.dl-card.windows:hover{box-shadow:0 16px 48px rgba(41,121,255,0.08)}
+.dl-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.dl-card.android::after{background:linear-gradient(90deg,var(--green),transparent)}
+.dl-card.windows::after{background:linear-gradient(90deg,var(--blue),transparent)}
+.dl-platform-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:22px;}
+.android .dl-platform-icon{background:rgba(0,230,118,0.1);color:var(--green)}
+.windows .dl-platform-icon{background:rgba(41,121,255,0.1);color:var(--blue)}
+.dl-card h3{font-size:1.1rem;font-weight:600;margin-bottom:6px}
+.dl-card .dl-os{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:20px;}
+.dl-card .dl-specs{list-style:none;font-size:13px;color:var(--text2);margin-bottom:24px;display:flex;flex-direction:column;gap:6px;}
+.dl-card .dl-specs li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);}
+.dl-card .dl-specs li:last-child{border-bottom:none}
+.dl-card .dl-specs .spec-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);font-weight:500;}
+.btn-dl{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;text-decoration:none;width:100%;transition:filter .2s,transform .1s,opacity .2s;cursor:pointer;border:none;font-family:'Space Grotesk',sans-serif;}
+.btn-dl:active{transform:scale(.98)}
+.android .btn-dl{background:var(--green);color:#000}
+.windows .btn-dl{background:var(--blue);color:#fff}
+.btn-dl:hover{filter:brightness(1.08)}
+.btn-dl:disabled{opacity:.5;cursor:not-allowed;filter:none;}
+.btn-dl svg{width:16px;height:16px;flex-shrink:0}
+.dl-secondary-links{display:flex;gap:12px;margin-top:10px;justify-content:center;}
+.dl-link-sm{font-size:12px;color:var(--text3);text-decoration:none;border-bottom:1px dashed var(--border2);padding-bottom:1px;transition:color .2s;}
+.dl-link-sm:hover{color:var(--text2)}
+
+/* â”€â”€ TOAST â”€â”€ */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:14px 20px;
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;color:var(--text);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  transform:translateY(80px);opacity:0;
+  transition:transform .35s ease,opacity .35s ease;
+  pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:18px}
+
+.stats-row{display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stat-cell{flex:1;min-width:180px;padding:32px 24px;text-align:center;border-right:1px solid var(--border);}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;line-height:1;margin-bottom:6px;}
+.stat-label{font-size:13px;color:var(--text2)}
+.section{padding:80px 40px}
+.container{max-width:1100px;margin:0 auto}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-.5px;margin-bottom:16px;line-height:1.2;}
+.section-desc{color:var(--text2);font-size:1rem;max-width:560px;line-height:1.7;margin-bottom:48px;}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;display:flex;gap:18px;transition:border-color .25s,background .25s;}
+.module-card:hover{border-color:var(--border2);background:var(--surface2);}
+.module-icon{width:44px;height:44px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.module-card h4{font-size:1rem;font-weight:600;margin-bottom:5px}
+.module-card p{font-size:13px;color:var(--text2);line-height:1.55}
+.module-tag{display:inline-block;margin-top:10px;font-size:11px;font-family:'JetBrains Mono',monospace;background:var(--tag-bg);border:1px solid var(--border2);color:var(--text3);padding:2px 10px;border-radius:100px;}
+.feature-split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+@media(max-width:768px){.feature-split{grid-template-columns:1fr}}
+.feature-list{display:flex;flex-direction:column;gap:24px}
+.feature-item{display:flex;gap:16px;align-items:flex-start;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:border-color .2s;}
+.feature-item:hover{border-color:var(--border2)}
+.feature-icon{width:40px;height:40px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--green-glow2);color:var(--green);}
+.feature-item h4{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.feature-item p{font-size:13px;color:var(--text2);line-height:1.55}
+.app-mockup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.mockup-topbar{background:var(--surface2);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;gap:8px;}
+.mockup-dot{width:10px;height:10px;border-radius:50%}
+.mockup-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3);margin-left:8px;}
+.mockup-body{padding:24px}
+.mockup-gauge-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.gauge-block{flex:1;min-width:100px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:center;}
+.gauge-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:600;color:var(--green);}
+.gauge-unit{font-size:11px;color:var(--text3);display:block}
+.gauge-label{font-size:12px;color:var(--text2);margin-top:4px}
+.mockup-chart-area{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;position:relative;overflow:hidden;height:120px;display:flex;align-items:flex-end;gap:4px;}
+.bar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(180deg,rgba(0,230,118,.7),rgba(0,230,118,.2));}
+.mockup-alarm{margin-top:12px;background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);border-radius:var(--radius-sm);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);display:flex;align-items:center;gap:8px;}
+.alarm-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease-in-out infinite;}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.tech-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;display:flex;align-items:center;gap:14px;transition:border-color .2s;}
+.tech-item:hover{border-color:var(--border2)}
+.tech-item-icon{font-size:22px;width:40px;text-align:center;flex-shrink:0}
+.tech-item h5{font-size:.9rem;font-weight:600;margin-bottom:2px}
+.tech-item span{font-size:12px;color:var(--text3)}
+.install-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:700px){.install-grid{grid-template-columns:1fr}}
+.install-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.install-header{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+.install-header.android-h{background:rgba(0,230,118,0.05)}
+.install-header.windows-h{background:rgba(41,121,255,0.05)}
+.install-header h4{font-size:1rem;font-weight:600}
+.install-header span{font-size:13px;color:var(--text2);display:block;margin-top:2px}
+.install-os-badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 10px;border-radius:100px;}
+.android-badge{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.windows-badge{background:rgba(41,121,255,.1);color:var(--blue);border:1px solid rgba(41,121,255,.2)}
+.install-steps{padding:24px;display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;gap:16px;align-items:flex-start;padding-bottom:22px;position:relative;}
+.step-row::before{content:'';position:absolute;left:15px;top:32px;bottom:0;width:1px;background:var(--border);}
+.step-row:last-child::before{display:none}
+.step-row:last-child{padding-bottom:0}
+.step-num{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);position:relative;z-index:1;}
+.android-block .step-num.done{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.08)}
+.windows-block .step-num.done{border-color:var(--blue);color:var(--blue);background:rgba(41,121,255,.08)}
+.step-content h5{font-size:.9rem;font-weight:600;margin-bottom:3px;margin-top:4px}
+.step-content p{font-size:13px;color:var(--text2);line-height:1.55}
+.step-content code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface3);border:1px solid var(--border2);color:var(--cyan);padding:2px 7px;border-radius:4px;}
+.step-warning{display:flex;gap:8px;align-items:flex-start;background:rgba(255,171,0,0.06);border:1px solid rgba(255,171,0,0.15);border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;font-size:12px;color:#FFD54F;}
+.req-table{width:100%;border-collapse:collapse;font-size:14px}
+.req-table th{text-align:left;padding:12px 16px;font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.req-table td{padding:14px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;}
+.req-table td:first-child{font-weight:500;color:var(--text);width:35%}
+.req-table tr:last-child td{border-bottom:none}
+.req-ok{color:var(--green);font-size:13px}
+.req-tag{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--tag-bg);border:1px solid var(--border2);color:var(--text2);padding:2px 8px;border-radius:4px;display:inline-block;margin:1px 2px;}
+.req-panels{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:700px){.req-panels{grid-template-columns:1fr}}
+.req-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.req-panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-weight:600;font-size:.95rem;}
+.req-panel-header.a-h{background:rgba(0,230,118,0.04)}
+.req-panel-header.w-h{background:rgba(41,121,255,0.04)}
+.info-box{display:flex;gap:16px;align-items:flex-start;background:rgba(0,184,212,0.06);border:1px solid rgba(0,184,212,0.2);border-radius:var(--radius);padding:20px 22px;font-size:14px;color:var(--text2);}
+.info-box-icon{font-size:22px;flex-shrink:0;margin-top:1px;color:var(--cyan)}
+.info-box strong{color:var(--text)}
+.faq-list{display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.faq-q{padding:18px 22px;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background .2s;}
+.faq-q:hover{background:var(--surface2)}
+.faq-q span{font-size:18px;color:var(--text3);transition:transform .3s;font-weight:300}
+.faq-item.open .faq-q span{transform:rotate(45deg)}
+.faq-a{display:none;padding:16px 22px 18px;font-size:14px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);}
+.faq-item.open .faq-a{display:block}
+footer{border-top:1px solid var(--border);padding:40px;text-align:center;}
+.footer-brand{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+footer p{font-size:13px;color:var(--text3)}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-top:16px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--text3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--text2)}
+@media(max-width:900px){nav{padding:0 20px;gap:16px}.nav-links{display:none}.section{padding:60px 20px}.hero{padding:60px 20px 60px}.stats-row{flex-direction:column}.stat-cell{border-right:none;border-bottom:1px solid var(--border)}.stat-cell:last-child{border-bottom:none}}
+@media(max-width:600px){.hero-downloads{flex-direction:column;align-items:center}.dl-card{width:100%;max-width:340px}footer{padding:40px 20px}}
+</style>
+</head>
+<body>
+
+<!-- â•â•â•â•â•â•â•â•â•â• TOAST NOTIFICATION â•â•â•â•â•â•â•â•â•â• -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">â¬‡ï¸</span>
+  <span id="toastMsg">Descarga iniciada</span>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â• NAV â•â•â•â•â•â•â•â•â•â• -->
+<nav>
+  <div class="nav-brand">â¬¡ Hitech Ingenium</div>
+  <div class="nav-links">
+    <a href="#features">Funcionalidades</a>
+    <a href="#modules">MÃ³dulos</a>
+    <a href="#requirements">Requisitos</a>
+    <a href="#install">InstalaciÃ³n</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#hero" class="nav-cta">Descargar ahora</a>
+</nav>
+
+<!-- â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â• -->
+<section class="hero" id="hero">
+  <div class="hero-eyebrow"><span></span>SCADA Master Ecosystem v1.0</div>
+  <h1>
+    <span class="brand-name">SCADA Master</span><br>
+    para <span class="accent">AutomatizaciÃ³n Industrial</span>
+  </h1>
+  <p class="hero-sub">Plataforma de supervisiÃ³n y control industrial en tiempo real para laboratorios universitarios de automatizaciÃ³n. Disponible para Android y Windows.</p>
+  <div class="hero-version-badge">VersiÃ³n estable 1.0.2 Â· Junio 2026 Â· Hitech Ingenium Labs</div>
+
+  <div class="hero-downloads">
+
+    <!-- â”€â”€ TARJETA ANDROID â”€â”€ -->
+    <div class="dl-card android">
+      <div class="dl-platform-icon">ðŸ¤–</div>
+      <h3>AplicaciÃ³n MÃ³vil</h3>
+      <div class="dl-os">ANDROID 8.0+</div>
+      <ul class="dl-specs">
+        <li><span>VersiÃ³n</span><span class="spec-val">1.0.2</span></li>
+        <li><span>Formato</span><span class="spec-val">.apk</span></li>
+        <li><span>TamaÃ±o</span><span class="spec-val">~63 MB</span></li>
+        <li><span>API mÃ­nima</span><span class="spec-val">API 26</span></li>
+      </ul>
+      <a href="https://github.com/LEONEL01295/scada-master-releases/releases/download/v1.0.2/app-release.apk" class="btn-dl" id="btn-android" onclick="handleDownload('android')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span id="btn-android-label">Descargar APK</span>
+      </a>
+      <div class="dl-secondary-links" style="margin-top:8px">
+        <a href="#install" class="dl-link-sm">GuÃ­a de instalaciÃ³n</a>
+        <a href="#requirements" class="dl-link-sm">Requisitos</a>
+      </div>
+    </div>
+
+    <!-- â”€â”€ TARJETA WINDOWS â”€â”€ -->
+    <div class="dl-card windows">
+      <div class="dl-platform-icon">ðŸªŸ</div>
+      <h3>Cliente de Escritorio</h3>
+      <div class="dl-os">WINDOWS 10 / 11 x64</div>
+      <ul class="dl-specs">
+        <li><span>VersiÃ³n</span><span class="spec-val">1.0.2</span></li>
+        <li><span>Formato</span><span class="spec-val">.zip</span></li>
+        <li><span>TamaÃ±o</span><span class="spec-val">~26 MB</span></li>
+        <li><span>Arquitectura</span><span class="spec-val">x64</span></li>
+      </ul>
+      <button class="btn-dl" id="btn-windows" onclick="handleDownload('windows')" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span id="btn-windows-label">Cargando...</span>
+      </button>
+      <div class="dl-secondary-links" style="margin-top:8px">
+        <a href="#install" class="dl-link-sm">GuÃ­a de instalaciÃ³n</a>
+        <a href="#requirements" class="dl-link-sm">Requisitos</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="info-box" style="max-width:680px;margin:0 auto">
+    <div class="info-box-icon">ðŸŒ</div>
+    <div>
+      <strong>Requisito de Red:</strong> Para sincronizar datos en tiempo real, tu dispositivo debe estar conectado a la red interna del laboratorio. Se requiere el servidor broker MQTT activo.
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• STATS â•â•â•â•â•â•â•â•â•â• -->
+<div class="stats-row">
+  <div class="stat-cell"><span class="stat-num">5</span><span class="stat-label">MÃ³dulos industriales incluidos</span></div>
+  <div class="stat-cell"><span class="stat-num">2</span><span class="stat-label">Plataformas compatibles</span></div>
+  <div class="stat-cell"><span class="stat-num">RT</span><span class="stat-label">Monitoreo en tiempo real</span></div>
+  <div class="stat-cell"><span class="stat-num">MQTT</span><span class="stat-label">Protocolo de comunicaciÃ³n</span></div>
+  <div class="stat-cell"><span class="stat-num">v1.0</span><span class="stat-label">VersiÃ³n estable actual</span></div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â• MODULES â•â•â•â•â•â•â•â•â•â• -->
+<section class="section" id="modules" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">MÃ³dulos</div>
+    <h2 class="section-title">5 estaciones industriales integradas</h2>
+    <p class="section-desc">Cada mÃ³dulo replica una estaciÃ³n de manufactura real, con variables en vivo, alarmas y logs completos de operaciÃ³n.</p>
+    <div class="modules-grid">
+      <div class="module-card"><div class="module-icon" style="background:rgba(0,230,118,.08);color:var(--green)">ðŸ’¨</div><div><h4>SCADA NeumÃ¡tico</h4><p>SupervisiÃ³n de presiones de lÃ­nea, estado de actuadores lineales y rotatorios, apertura/cierre de electrovÃ¡lvulas y diagramas P&ID interactivos.</p><span class="module-tag">PRESIÃ“N Â· CAUDAL Â· ELECTROVÃLVULAS</span></div></div>
+      <div class="module-card"><div class="module-icon" style="background:rgba(41,121,255,.08);color:var(--blue)">ðŸ¦¾</div><div><h4>Brazo Robot 3 Ejes</h4><p>VisualizaciÃ³n cartesiana en tiempo real de ejes X, Y, Z. Control cinemÃ¡tico coordinado, tracking de trayectorias y posiciÃ³n de home.</p><span class="module-tag">X Â· Y Â· Z Â· CINEMÃTICA</span></div></div>
+      <div class="module-card"><div class="module-icon" style="background:rgba(255,171,0,.08);color:#FFAB00">âš™ï¸</div><div><h4>EstaciÃ³n de Maquinados</h4><p>Monitoreo de velocidad de husillo, temperatura de corte, desgaste de herramienta, conteo de piezas y tiempo de ciclo.</p><span class="module-tag">RPM Â· TEMP Â· CONTEO</span></div></div>
+      <div class="module-card"><div class="module-icon" style="background:rgba(255,82,82,.08);color:#FF5252">ðŸ”©</div><div><h4>Sistema de Prensado</h4><p>Registro de fuerza aplicada en kN, control de posiciÃ³n del Ã©mbolo hidrÃ¡ulico, validaciÃ³n dimensional y alertas de sobre-presiÃ³n.</p><span class="module-tag">kN Â· HIDRÃULICA Â· QC</span></div></div>
+      <div class="module-card"><div class="module-icon" style="background:rgba(0,184,212,.08);color:var(--cyan)">ðŸ“‹</div><div><h4>Historial y Logs</h4><p>AuditorÃ­a completa de alarmas activas e histÃ³ricas, fallas del sistema, exportaciÃ³n de reportes y filtros por mÃ³dulo o severidad.</p><span class="module-tag">ALARMAS Â· EXPORTAR Â· AUDIT</span></div></div>
+      <div class="module-card" style="border-style:dashed;opacity:.6"><div class="module-icon" style="background:var(--surface3);color:var(--text3)">ðŸ”®</div><div><h4>PrÃ³ximamente</h4><p>Nuevos mÃ³dulos en desarrollo: Sistema de VisiÃ³n Artificial, Banda Transportadora y Reportes analÃ­ticos avanzados.</p><span class="module-tag">EN DESARROLLO</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• FEATURES â•â•â•â•â•â•â•â•â•â• -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="feature-split">
+      <div>
+        <div class="section-label">Funcionalidades</div>
+        <h2 class="section-title">DiseÃ±ado para el laboratorio real</h2>
+        <p class="section-desc">SCADA Master conecta directamente con los PLCs y sensores del laboratorio, ofreciendo datos reales en milisegundos.</p>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-icon">âš¡</div><div><h4>Tiempo real con MQTT &amp; WebSockets</h4><p>Latencia sub-100 ms para variables crÃ­ticas. ReconexiÃ³n automÃ¡tica ante pÃ©rdida de seÃ±al.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">ðŸ“Š</div><div><h4>Dashboards interactivos por mÃ³dulo</h4><p>GrÃ¡ficas de tendencia configurables, gauges animados y tableros P&ID con estado en vivo.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">ðŸ””</div><div><h4>Sistema de alarmas con prioridad</h4><p>Alarmas crÃ­ticas, de advertencia e informativas con notificaciÃ³n push en mÃ³vil y sonido configurable.</p></div></div>
+          <div class="feature-item"><div class="feature-icon">ðŸ“±</div><div><h4>UI adaptable a pantalla</h4><p>Mismo diseÃ±o funcional en telÃ©fono Android de 5" y monitor de laboratorio de 27". Sin configuraciÃ³n adicional.</p></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="app-mockup">
+          <div class="mockup-topbar">
+            <div class="mockup-dot" style="background:#FF5F57"></div>
+            <div class="mockup-dot" style="background:#FEBC2E"></div>
+            <div class="mockup-dot" style="background:#28C840"></div>
+            <span class="mockup-title">SCADA Master â€” NeumÃ¡tico</span>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:12px">LIVE Â· ACTUALIZADO HACE 0.3s</div>
+            <div class="mockup-gauge-row">
+              <div class="gauge-block"><div class="gauge-val">6.2</div><span class="gauge-unit">bar</span><div class="gauge-label">PresiÃ³n lÃ­nea</div></div>
+              <div class="gauge-block"><div class="gauge-val" style="color:var(--blue)">14.1</div><span class="gauge-unit">L/min</span><div class="gauge-label">Caudal</div></div>
+              <div class="gauge-block"><div class="gauge-val" style="color:var(--cyan)">38Â°</div><span class="gauge-unit">Â°C</span><div class="gauge-label">Temperatura</div></div>
+            </div>
+            <div style="font-size:12px;color:var(--text3);margin-bottom:8px">PresiÃ³n Ãºltimos 30s</div>
+            <div class="mockup-chart-area">
+              <div class="bar" style="height:55%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:80%"></div><div class="bar" style="height:65%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:75%"></div><div class="bar" style="height:85%"></div><div class="bar" style="height:78%"></div><div class="bar" style="height:95%"></div>
+            </div>
+            <div class="mockup-alarm"><div class="alarm-dot"></div>SYS_OK Â· Todos los actuadores en estado nominal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• REQUIREMENTS â•â•â•â•â•â•â•â•â•â• -->
+<section class="section" id="requirements" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Compatibilidad</div>
+    <h2 class="section-title">Requisitos del sistema</h2>
+    <p class="section-desc">Verifica que tu dispositivo cumple los requisitos mÃ­nimos antes de instalar.</p>
+    <div class="req-panels">
+      <div class="req-panel"><div class="req-panel-header a-h"><span style="font-size:22px">ðŸ¤–</span><div><span>AplicaciÃ³n Android</span><span style="font-size:12px;color:var(--text3);font-weight:400">APK Â· InstalaciÃ³n directa</span></div></div><table class="req-table"><tr><td>Sistema operativo</td><td><span class="req-tag">Android 8.0</span> o superior</td></tr><tr><td>API Level mÃ­nimo</td><td><span class="req-tag">API 26</span></td></tr><tr><td>RAM recomendada</td><td>2 GB o mÃ¡s</td></tr><tr><td>Almacenamiento</td><td>~70 MB libres</td></tr><tr><td>Red</td><td>Wi-Fi (red laboratorio o internet)</td></tr><tr><td>Permisos</td><td>Red, Notificaciones</td></tr><tr><td>Fuentes desconocidas</td><td><span class="req-ok">âš  Requiere activaciÃ³n manual</span></td></tr></table></div>
+      <div class="req-panel"><div class="req-panel-header w-h"><span style="font-size:22px">ðŸªŸ</span><div><span>Cliente Windows</span><span style="font-size:12px;color:var(--text3);font-weight:400">ZIP Â· Carpeta portable</span></div></div><table class="req-table"><tr><td>Sistema operativo</td><td><span class="req-tag">Windows 10</span> <span class="req-tag">Windows 11</span></td></tr><tr><td>Arquitectura</td><td><span class="req-tag">x64</span> (64-bit)</td></tr><tr><td>RAM mÃ­nima</td><td>4 GB (8 GB recomendado)</td></tr><tr><td>Almacenamiento</td><td>~100 MB libres</td></tr><tr><td>Red</td><td>Ethernet o Wi-Fi (red laboratorio)</td></tr><tr><td>ResoluciÃ³n</td><td>1280Ã—720 mÃ­nimo</td></tr><tr><td>SmartScreen</td><td><span class="req-ok">âš  Requiere excepciÃ³n manual</span></td></tr></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• TECH STACK â•â•â•â•â•â•â•â•â•â• -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">TecnologÃ­a</div>
+    <h2 class="section-title">Stack tecnolÃ³gico</h2>
+    <p class="section-desc">Construido sobre tecnologÃ­as de automatizaciÃ³n industrial estÃ¡ndar de la industria.</p>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-item-icon">ðŸ“¡</div><div><h5>MQTT Broker</h5><span>ComunicaciÃ³n pub/sub en tiempo real</span></div></div>
+      <div class="tech-item"><div class="tech-item-icon">ðŸ”Œ</div><div><h5>WebSockets</h5><span>Canal bidireccional persistente</span></div></div>
+      <div class="tech-item"><div class="tech-item-icon">ðŸ¦</div><div><h5>Flutter / Dart</h5><span>App Android y Windows con UI nativa</span></div></div>
+      <div class="tech-item"><div class="tech-item-icon">ðŸ”¢</div><div><h5>Node.js Backend</h5><span>Servidor de datos y autenticaciÃ³n</span></div></div>
+      <div class="tech-item"><div class="tech-item-icon">ðŸ—ƒï¸</div><div><h5>SQLite / Firebase</h5><span>Almacenamiento local e historial cloud</span></div></div>
+      <div class="tech-item"><div class="tech-item-icon">ðŸ”’</div><div><h5>JWT Auth</h5><span>AutenticaciÃ³n segura con roles y permisos</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• INSTALL GUIDE â•â•â•â•â•â•â•â•â•â• -->
+<section class="section" id="install" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">InstalaciÃ³n</div>
+    <h2 class="section-title">GuÃ­a de instalaciÃ³n paso a paso</h2>
+    <p class="section-desc">Sigue estos pasos exactos para instalar SCADA Master en tu dispositivo.</p>
+    <div class="install-grid">
+      <div class="install-block android-block">
+        <div class="install-header android-h"><span style="font-size:24px">ðŸ¤–</span><div><h4>InstalaciÃ³n en Android</h4><span>Archivo APK Â· InstalaciÃ³n directa</span></div><span class="install-os-badge android-badge" style="margin-left:auto">Android 8+</span></div>
+        <div class="install-steps">
+          <div class="step-row"><div class="step-num done">1</div><div class="step-content"><h5>Descargar el archivo APK</h5><p>Toca el botÃ³n <strong>Descargar APK</strong> en esta pÃ¡gina. El archivo <code>SCADA-Master.apk</code> se descargarÃ¡ en tu carpeta de descargas.</p></div></div>
+          <div class="step-row"><div class="step-num done">2</div><div class="step-content"><h5>Confirmar descarga</h5><p>Si tu navegador muestra una advertencia de archivo potencialmente daÃ±ino, selecciona <strong>"Descargar de todas formas"</strong>. Esta advertencia es normal para APKs fuera de Play Store.</p></div></div>
+          <div class="step-row"><div class="step-num done">3</div><div class="step-content"><h5>Permitir fuentes desconocidas</h5><p>Al abrir el APK, ve a <strong>Ajustes â†’ Aplicaciones â†’ Permisos especiales â†’ Instalar apps desconocidas</strong> y actÃ­valo para tu navegador.</p><div class="step-warning">âš  Este permiso aplica solo a tu navegador, no afecta la seguridad global del sistema.</div></div></div>
+          <div class="step-row"><div class="step-num">4</div><div class="step-content"><h5>Instalar y conectar</h5><p>Toca <strong>Instalar</strong> y espera unos segundos. Abre SCADA Master, conÃ©ctate al Wi-Fi del laboratorio y listo.</p></div></div>
+        </div>
+      </div>
+      <div class="install-block windows-block">
+        <div class="install-header windows-h"><span style="font-size:24px">ðŸªŸ</span><div><h4>InstalaciÃ³n en Windows</h4><span>Archivo ZIP Â· Carpeta portable</span></div><span class="install-os-badge windows-badge" style="margin-left:auto">Win 10/11</span></div>
+        <div class="install-steps">
+          <div class="step-row"><div class="step-num done">1</div><div class="step-content"><h5>Descargar el archivo ZIP</h5><p>Haz clic en <strong>Descargar instalador (.zip)</strong>. El archivo <code>SCADA-Master-Windows-v1.0.3.zip</code> se guardarÃ¡ en tu carpeta de descargas.</p></div></div>
+          <div class="step-row"><div class="step-num done">2</div><div class="step-content"><h5>Extraer el contenido</h5><p>Haz clic derecho sobre el archivo descargado y selecciona <strong>"Extraer todo..."</strong>. Elige una carpeta de destino (por ejemplo, Escritorio).</p></div></div>
+          <div class="step-row"><div class="step-num done">3</div><div class="step-content"><h5>Pasar SmartScreen (si aparece)</h5><p>Al ejecutar <code>analytics_dashboard.exe</code> dentro de la carpeta extraÃ­da, Windows Defender SmartScreen puede mostrar una advertencia. Haz clic en <strong>"MÃ¡s informaciÃ³n"</strong> y luego en <strong>"Ejecutar de todas formas"</strong>.</p><div class="step-warning">âš  Este aviso aparece porque el ejecutable no tiene firma digital comercial, no porque sea peligroso.</div></div></div>
+          <div class="step-row"><div class="step-num">4</div><div class="step-content"><h5>Ejecutar la aplicaciÃ³n</h5><p>Dentro de la carpeta extraÃ­da, ejecuta <code>analytics_dashboard.exe</code>. No muevas ni borres los demÃ¡s archivos/DLLs de la carpeta, son necesarios para que la app funcione.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• FAQ â•â•â•â•â•â•â•â•â•â• -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-label">Soporte</div>
+    <h2 class="section-title">Preguntas frecuentes</h2>
+    <p class="section-desc">Respuestas rÃ¡pidas a los problemas mÃ¡s comunes.</p>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿Por quÃ© Android muestra que el archivo puede ser daÃ±ino?<span>+</span></div><div class="faq-a">Los archivos APK descargados fuera de Google Play siempre muestran esta advertencia por polÃ­ticas de seguridad de Android. El archivo APK de SCADA Master es desarrollado por Hitech Ingenium Labs exclusivamente para uso acadÃ©mico. Puedes seleccionar "Descargar de todas formas" con total seguridad.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿Puedo usar SCADA Master sin conectarme a la red del laboratorio?<span>+</span></div><div class="faq-a">La aplicaciÃ³n requiere conectividad con el broker MQTT para recibir datos en tiempo real. Sin conexiÃ³n a la red interna del laboratorio, la app mostrarÃ¡ los paneles pero sin datos en vivo. El historial local almacenado sÃ­ es accesible sin conexiÃ³n.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿CuÃ¡l es la direcciÃ³n IP o URL del servidor MQTT?<span>+</span></div><div class="faq-a">La configuraciÃ³n del servidor MQTT (IP, puerto y credenciales) la proporciona el instructor del laboratorio. Consulta a tu profesor o al manual de prÃ¡ctica de tu laboratorio.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿SCADA Master estÃ¡ disponible para iOS o macOS?<span>+</span></div><div class="faq-a">Actualmente SCADA Master estÃ¡ disponible Ãºnicamente para Android (APK) y Windows (x64). El desarrollo de versiones para iOS y macOS estÃ¡ en evaluaciÃ³n para futuras versiones del ecosistema.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿La app consume muchos datos mÃ³viles?<span>+</span></div><div class="faq-a">SCADA Master estÃ¡ optimizado para redes locales de laboratorio. El protocolo MQTT es extremadamente ligero. En uso normal, el consumo es de aproximadamente 2â€“5 MB por hora. Se recomienda siempre usar la red Wi-Fi del campus para mayor estabilidad y menor latencia.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Â¿CÃ³mo reporto un bug o solicito una funcionalidad?<span>+</span></div><div class="faq-a">Puedes reportar problemas o solicitudes directamente al equipo de Hitech Ingenium Labs a travÃ©s del instructor del laboratorio. Incluye el mÃ³dulo afectado, la versiÃ³n de la app, tu sistema operativo y una descripciÃ³n clara del problema.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â• -->
+<footer>
+  <div class="footer-brand">â¬¡ Hitech Ingenium Labs</div>
+  <p>SCADA Master Ecosystem Â· VersiÃ³n 1.0.2 Â· Junio 2026</p>
+  <p style="margin-top:4px">Desarrollado para el Laboratorio de AutomatizaciÃ³n Industrial â€” Uso acadÃ©mico exclusivo</p>
+  <div class="footer-links">
+    <a href="#hero">Descargas</a><a href="#modules">MÃ³dulos</a>
+    <a href="#install">InstalaciÃ³n</a><a href="#faq">Soporte</a>
+  </div>
+  <p style="margin-top:24px;font-size:12px">Â© 2026 Hitech Ingenium Labs. Todos los derechos reservados.</p>
+</footer>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     ðŸ”¥ FIREBASE INTEGRATION
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     Las descargas apuntan a la release v1.0.2 de GitHub:
+     https://github.com/LEONEL01295/scada-master-releases/releases/tag/v1.0.2
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<script type="module">
+  import { initializeApp }         from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+
+  // â”€â”€ 1. CONFIGURACIÃ“N DE FIREBASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const firebaseConfig = {
+    apiKey:            "AIzaSyDSHJn_JiomBKbmvl0gDVXP2Fdj_uftFhA",
+    authDomain:        "maqueta-de-industrial.firebaseapp.com",
+    projectId:         "maqueta-de-industrial",
+    storageBucket:     "maqueta-de-industrial.firebasestorage.app",
+    messagingSenderId: "737546234830",
+    appId:             "1:737546234830:web:4dafe86ce13d60b6e4199f"
+  };
+
+  // â”€â”€ 2. INICIALIZAR FIREBASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const app     = initializeApp(firebaseConfig);
+  const db      = getFirestore(app);
+
+
+  // â”€â”€ 3. LINKS DE DESCARGA DIRECTA (v1.0.2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const downloadURLs = {
+    android: "https://github.com/LEONEL01295/scada-master-releases/releases/download/v1.0.2/app-release.apk",
+    windows: "SCADA-Master-Windows-v1.0.3.zip"
+  };
+
+  // â”€â”€ 4. ACTIVAR BOTONES DISPONIBLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  function loadDownloadURLs() {
+    for (const [platform, url] of Object.entries(downloadURLs)) {
+      const btn   = document.getElementById(`btn-${platform}`);
+      const label = document.getElementById(`btn-${platform}-label`);
+      if (url) {
+        btn.disabled      = false;
+        label.textContent = platform === 'android'
+          ? 'Descargar APK'
+          : 'Descargar instalador (.zip)';
+      } else {
+        btn.disabled      = true;
+        label.textContent = 'PrÃ³ximamente';
+      }
+    }
+  }
+
+  // â”€â”€ 5. MANEJAR DESCARGA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  window.handleDownload = async function(platform) {
+    const url = downloadURLs[platform];
+    if (!url) return;
+
+    // Registrar descarga detallada
+    await registrarDescarga(platform);
+
+    // Mostrar toast
+    showToast(
+      platform === 'android' ? 'â¬‡ï¸' : 'ðŸªŸ',
+      platform === 'android'
+        ? 'Descargando APK desde GitHub Releasesâ€¦'
+        : 'Descargando ZIP de Windows desde GitHub Releasesâ€¦'
+    );
+
+    // Iniciar descarga directa
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', platform === 'android' ? 'SCADA-Master.apk' : 'SCADA-Master-Windows-v1.0.3.zip');
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => document.body.removeChild(a), 200);
+  };
+
+  // â”€â”€ 6. TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  function showToast(icon, msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMsg').textContent  = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // â”€â”€ 7. REGISTRAR VISITA EN FIRESTORE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  async function registrarVisita() {
+    try {
+      const visita = {
+        timestamp:   new Date().toISOString(),
+        pagina:      window.location.href,
+        dispositivo: /Mobi|Android/i.test(navigator.userAgent) ? 'Movil' : 'Escritorio',
+        navegador:   navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge|OPR)\/[\d.]+/)?.[0] || navigator.userAgent.substring(0,50),
+        idioma:      navigator.language,
+        pantalla:    screen.width + 'x' + screen.height,
+        referrer:    document.referrer || 'Directo',
+      };
+      const visRef = doc(db, 'visitas', Date.now().toString());
+      await setDoc(visRef, visita);
+    } catch(e) { console.warn('Visita no registrada:', e); }
+  }
+
+  // â”€â”€ 8. REGISTRAR DESCARGA DETALLADA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  async function registrarDescarga(platform) {
+    try {
+      const descarga = {
+        timestamp:   new Date().toISOString(),
+        plataforma:  platform === 'android' ? 'Android APK' : 'Windows ZIP',
+        dispositivo: /Mobi|Android/i.test(navigator.userAgent) ? 'Movil' : 'Escritorio',
+        navegador:   navigator.userAgent.match(/(Chrome|Firefox|Safari|Edge|OPR)\/[\d.]+/)?.[0] || navigator.userAgent.substring(0,50),
+        idioma:      navigator.language,
+        referrer:    document.referrer || 'Directo',
+      };
+      const dlRef = doc(db, 'descargas', Date.now().toString());
+      await setDoc(dlRef, descarga);
+    } catch(e) { console.warn('Descarga no registrada:', e); }
+  }
+
+  // â”€â”€ INICIAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  loadDownloadURLs();
+  registrarVisita();
+</script>
+
+</body>
+</html>
+
